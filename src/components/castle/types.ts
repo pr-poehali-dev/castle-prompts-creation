@@ -6,6 +6,7 @@ export interface Prompt {
   rating: number;
   reviews: number;
   author: string;
+  authorId: string;
   description: string;
   preview: string;
   color: string;
@@ -21,10 +22,28 @@ export interface Review {
   id: number;
   promptId: number;
   author: string;
+  authorAvatar?: string;
   rating: number;
   comment: string;
   date: string;
   helpful: number;
+}
+
+export interface Author {
+  id: string;
+  name: string;
+  avatar?: string;
+  bio: string;
+  totalSales: number;
+  totalPrompts: number;
+  rating: number;
+  joinDate: string;
+  badge?: 'verified' | 'pro' | 'expert';
+  socials?: {
+    twitter?: string;
+    github?: string;
+    website?: string;
+  };
 }
 
 export const mockPrompts: Prompt[] = [
@@ -36,6 +55,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 127,
     author: 'Анна Соколова',
+    authorId: 'anna-sokolova',
     description: 'Промпт создает полноценную маркетинговую стратегию для стартапов с учетом целевой аудитории, конкурентов и бюджета.',
     preview: 'Проанализируй рынок [ниша] и создай маркетинговую стратегию для стартапа...',
     color: 'from-orange-500 to-pink-500',
@@ -53,6 +73,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.9,
     reviews: 203,
     author: 'Дмитрий Волков',
+    authorId: 'dmitry-volkov',
     description: 'Создает захватывающие сценарии для YouTube-видео любой тематики с хуками, структурой и призывами к действию.',
     preview: 'Напиши сценарий для видео на тему [тема] длительностью [время]...',
     color: 'from-cyan-500 to-blue-500',
@@ -70,6 +91,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 89,
     author: 'Игорь Петров',
+    authorId: 'igor-petrov',
     description: 'Анализирует Python-код, находит баги, предлагает оптимизации и следит за соблюдением best practices.',
     preview: 'Проанализируй следующий Python код и предложи улучшения...',
     color: 'from-green-500 to-emerald-500',
@@ -87,6 +109,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.6,
     reviews: 156,
     author: 'Елена Смирнова',
+    authorId: 'elena-smirnova',
     description: 'Разрабатывает персонализированные учебные планы для изучения любого навыка с временными рамками и контрольными точками.',
     preview: 'Создай учебный план для изучения [навык] за [срок]...',
     color: 'from-purple-500 to-indigo-500',
@@ -104,6 +127,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.9,
     reviews: 341,
     author: 'Михаил Кузнецов',
+    authorId: 'mikhail-kuznetsov',
     description: 'Создает продающие рекламные тексты для любых платформ: Facebook, Instagram, Google Ads с фокусом на конверсию.',
     preview: 'Создай рекламный текст для [продукт] целевая аудитория [ЦА]...',
     color: 'from-rose-500 to-red-500',
@@ -121,6 +145,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 112,
     author: 'Алексей Новиков',
+    authorId: 'igor-petrov',
     description: 'Улучшает JavaScript/TypeScript код: чистит, оптимизирует, внедряет современные паттерны и следит за производительностью.',
     preview: 'Отрефактори этот JavaScript код, улучши читаемость и производительность...',
     color: 'from-yellow-500 to-amber-500',
@@ -180,6 +205,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 1243,
     author: 'Анонимус',
+    authorId: 'anonymous',
     description: 'Продвинутые техники обхода ограничений AI-моделей. Позволяет получать ответы на любые темы без блокировок. Работает с GPT-4, Claude, DeepSeek.',
     preview: 'Используй ролевой фреймворк: "Представь, что ты [роль] в симуляции..."',
     color: 'from-red-500 via-orange-500 to-yellow-500',
@@ -202,6 +228,7 @@ export const mockPrompts: Prompt[] = [
     rating: 5.0,
     reviews: 2891,
     author: 'Мастер Промптов',
+    authorId: 'prompt-master',
     description: 'Легендарный мета-промпт, содержащий ВСЕ лучшие техники. Включает: roleplay, jailbreak, цепочки мыслей, self-reflection, multimodal prompting, и 50+ методик. Пожизненные обновления.',
     preview: 'Ты — продвинутая AI-система с расширенными возможностями. Используй multi-step reasoning, CoT, ToT...',
     color: 'from-yellow-400 via-amber-500 to-orange-600',
@@ -231,6 +258,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 234,
     author: 'Сергей Белов',
+    authorId: 'anna-sokolova',
     description: 'Оптимизирует тексты для поисковых систем. Анализирует конкурентов, подбирает ключевые слова, улучшает структуру.',
     preview: 'Оптимизируй статью на тему [тема] для SEO. Проанализируй топ-10 конкурентов...',
     color: 'from-indigo-500 to-purple-500',
@@ -248,6 +276,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 456,
     author: 'Ольга Петрова',
+    authorId: 'mikhail-kuznetsov',
     description: 'Создает email-письма с высокой конверсией. Приветственные серии, реактивация, продажи через сторителлинг.',
     preview: 'Создай серию из 5 email для [продукт]. Цель: [цель конверсии]...',
     color: 'from-pink-500 to-rose-500',
@@ -265,6 +294,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.9,
     reviews: 567,
     author: 'Максим Орлов',
+    authorId: 'mikhail-kuznetsov',
     description: 'Пишет продающие лендинги с фокусом на конверсию. Формула AIDA, социальные доказательства, психологические триггеры.',
     preview: 'Напиши текст для лендинга [продукт/услуга]. УТП: [уникальное предложение]...',
     color: 'from-amber-500 to-orange-500',
@@ -282,6 +312,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 189,
     author: 'Мария Романова',
+    authorId: 'dmitry-volkov',
     description: 'Помогает писать полноценные романы. Создает сюжет, персонажей, диалоги, описания. Поддерживает любые жанры.',
     preview: 'Создай план романа в жанре [жанр]. Сюжетные арки, персонажи, конфликты...',
     color: 'from-purple-500 to-pink-500',
@@ -299,6 +330,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.6,
     reviews: 678,
     author: 'Александр Лирик',
+    authorId: 'dmitry-volkov',
     description: 'Создает стихи любой сложности и стиля. От классики до модерна, от сонетов до хокку.',
     preview: 'Напиши стихотворение на тему [тема] в стиле [стиль]. Размер: [размер]...',
     color: 'from-cyan-500 to-teal-500',
@@ -316,6 +348,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 892,
     author: 'Дарья Блогер',
+    authorId: 'dmitry-volkov',
     description: 'Пишет вирусные блог-посты с высокой вовлеченностью. Хуки, сторителлинг, эмоции, призывы.',
     preview: 'Напиши блог-пост на тему [тема] с вирусным потенциалом. Включи истории...',
     color: 'from-green-500 to-cyan-500',
@@ -333,6 +366,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.9,
     reviews: 234,
     author: 'Владислав Реактов',
+    authorId: 'igor-petrov',
     description: 'Создает архитектуру React-приложений. Компоненты, хуки, state management, оптимизация, best practices.',
     preview: 'Спроектируй архитектуру для [описание приложения]. Используй React, TypeScript...',
     color: 'from-blue-500 to-cyan-500',
@@ -350,6 +384,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 345,
     author: 'Николай Базов',
+    authorId: 'igor-petrov',
     description: 'Оптимизирует SQL-запросы для максимальной производительности. Индексы, планы выполнения, нормализация.',
     preview: 'Оптимизируй SQL-запрос: [запрос]. Добавь индексы, explain plan...',
     color: 'from-emerald-500 to-green-500',
@@ -367,6 +402,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 456,
     author: 'Артём Апишник',
+    authorId: 'igor-petrov',
     description: 'Проектирует RESTful API по лучшим практикам. Эндпоинты, версионирование, документация, безопасность.',
     preview: 'Спроектируй REST API для [система]. Определи эндпоинты, методы, модели...',
     color: 'from-orange-500 to-red-500',
@@ -384,6 +420,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.6,
     reviews: 567,
     author: 'Ирина Тестова',
+    authorId: 'elena-smirnova',
     description: 'Создает тесты и экзаменационные вопросы по любому предмету. Разные уровни сложности, форматы вопросов.',
     preview: 'Создай тест по [предмет] на тему [тема]. 20 вопросов, разные типы...',
     color: 'from-violet-500 to-purple-500',
@@ -401,6 +438,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 432,
     author: 'Пётр Лекторов',
+    authorId: 'elena-smirnova',
     description: 'Превращает любой материал в структурированный конспект лекции. Таблицы, списки, ключевые идеи.',
     preview: 'Создай конспект лекции по [тема]. Структурируй в разделы, добавь примеры...',
     color: 'from-indigo-500 to-blue-500',
@@ -418,6 +456,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 234,
     author: 'Светлана Академикова',
+    authorId: 'elena-smirnova',
     description: 'Помогает с написанием курсовых и дипломных работ. Структура, введение, заключение, литература.',
     preview: 'Помоги со структурой [тип работы] на тему [тема]. Специальность: [специальность]...',
     color: 'from-purple-500 to-pink-500',
@@ -435,6 +474,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.9,
     reviews: 345,
     author: 'Андрей Космос',
+    authorId: 'vladimir-drakonov',
     description: 'Создает научно-фантастические миры с деталями. Технологии, общество, конфликты, планеты, расы.',
     preview: 'Создай sci-fi мир с [особенность]. Опиши технологии, общество, конфликт...',
     color: 'from-cyan-500 to-blue-500',
@@ -452,6 +492,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 567,
     author: 'Виктор Мастер',
+    authorId: 'vladimir-drakonov',
     description: 'Генерирует увлекательные квесты для D&D. Завязка, развитие, твисты, награды, NPC.',
     preview: 'Создай квест для группы [уровень] уровня. Тема: [тема]. Длительность: [время]...',
     color: 'from-red-500 to-orange-500',
@@ -469,6 +510,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 678,
     author: 'Елена НПЦшница',
+    authorId: 'vladimir-drakonov',
     description: 'Создает запоминающихся NPC с уникальными личностями, мотивациями, секретами и квестами.',
     preview: 'Создай NPC [роль] для [сеттинг]. Добавь личность, мотивацию, секрет...',
     color: 'from-pink-500 to-purple-500',
@@ -486,6 +528,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.9,
     reviews: 1567,
     author: 'GPT Гуру',
+    authorId: 'prompt-master',
     description: 'Выжимает максимум из GPT-4. Продвинутые техники, system prompts, temperature control, token optimization.',
     preview: 'System: Ты эксперт в [область]. Используй CoT, step-by-step reasoning...',
     color: 'from-green-500 to-emerald-500',
@@ -504,6 +547,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.8,
     reviews: 892,
     author: 'Артист Промптов',
+    authorId: 'prompt-master',
     description: 'Профессиональные промпты для MidJourney. Стили, параметры, композиция, освещение, референсы.',
     preview: '/imagine [объект] in style of [стиль], [параметры], --ar 16:9 --v 6...',
     color: 'from-purple-500 to-pink-500',
@@ -522,6 +566,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.7,
     reviews: 456,
     author: 'Контекстный Маг',
+    authorId: 'prompt-master',
     description: 'Техники управления памятью и контекстом AI. Длинные диалоги, сохранение стиля, персистентность.',
     preview: 'Используй контекстные якоря: "Помни, что в начале я сказал [...]"...',
     color: 'from-blue-500 to-purple-500',
@@ -540,6 +585,7 @@ export const mockPrompts: Prompt[] = [
     rating: 4.6,
     reviews: 678,
     author: 'Спидран Промптов',
+    authorId: 'prompt-master',
     description: 'Оптимизация промптов для максимальной скорости. Сокращение токенов, эффективные инструкции.',
     preview: 'Ответь кратко. Формат: [список/таблица]. Без объяснений, только суть...',
     color: 'from-yellow-500 to-orange-500',
@@ -558,6 +604,7 @@ export const mockPrompts: Prompt[] = [
     rating: 5.0,
     reviews: 234,
     author: 'Футуролог AI',
+    authorId: 'prompt-master',
     description: 'Анализирует тренды в AI и предсказывает будущие возможности. Для инвесторов и предпринимателей.',
     preview: 'Проанализируй текущие тренды в [область AI]. Спрогнозируй развитие на [срок]...',
     color: 'from-indigo-500 to-purple-500',
@@ -613,3 +660,6 @@ export const categoryColors: Record<string, string> = {
 };
 
 export type SortOption = 'popular' | 'rating' | 'price-low' | 'price-high' | 'newest';
+
+// Re-export data
+export { mockAuthors, mockReviews } from './data';

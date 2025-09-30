@@ -1,7 +1,9 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import ReviewsSection from './ReviewsSection';
 import { Prompt } from './types';
 
 interface PromptDetailDialogProps {
@@ -9,12 +11,13 @@ interface PromptDetailDialogProps {
   isInCart: boolean;
   onClose: () => void;
   onAddToCart: () => void;
+  onViewAuthor: (authorId: string) => void;
 }
 
-export default function PromptDetailDialog({ prompt, isInCart, onClose, onAddToCart }: PromptDetailDialogProps) {
+export default function PromptDetailDialog({ prompt, isInCart, onClose, onAddToCart, onViewAuthor }: PromptDetailDialogProps) {
   return (
     <Dialog open={!!prompt} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-card/95 backdrop-blur border-2">
+      <DialogContent className="max-w-4xl bg-card/95 backdrop-blur border-2 max-h-[90vh] overflow-y-auto">
         {prompt && (
           <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${prompt.color}`} />
         )}
@@ -39,14 +42,33 @@ export default function PromptDetailDialog({ prompt, isInCart, onClose, onAddToC
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4">
-          <div className="animate-fade-in">
-            <h4 className="font-semibold mb-2 flex items-center gap-2">
-              <Icon name="User" className="h-4 w-4 text-cyan-400" />
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Автор</span>
-            </h4>
-            <p className="text-muted-foreground">{prompt?.author}</p>
-          </div>
+        <Tabs defaultValue="details" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="details">Детали</TabsTrigger>
+            <TabsTrigger value="reviews">Отзывы ({prompt?.reviews || 0})</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="details" className="space-y-4 mt-4">
+            <div className="animate-fade-in">
+              <h4 className="font-semibold mb-2 flex items-center gap-2">
+                <Icon name="User" className="h-4 w-4 text-cyan-400" />
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Автор</span>
+              </h4>
+              <Button
+                variant="ghost"
+                className="h-auto p-0 hover:bg-transparent"
+                onClick={() => {
+                  if (prompt?.authorId) {
+                    onViewAuthor(prompt.authorId);
+                    onClose();
+                  }
+                }}
+              >
+                <span className="text-muted-foreground hover:text-foreground hover:underline transition-colors">
+                  {prompt?.author}
+                </span>
+              </Button>
+            </div>
 
           <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
             <h4 className="font-semibold mb-2 flex items-center gap-2">
@@ -81,30 +103,41 @@ export default function PromptDetailDialog({ prompt, isInCart, onClose, onAddToC
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-4 border-t animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <div className={`text-3xl font-heading font-bold bg-gradient-to-r ${prompt?.color} bg-clip-text text-transparent`}>
-              {prompt?.price} ₽
+            <div className="flex items-center justify-between pt-4 border-t animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <div className={`text-3xl font-heading font-bold bg-gradient-to-r ${prompt?.color} bg-clip-text text-transparent`}>
+                {prompt?.price} ₽
+              </div>
+              <Button 
+                size="lg"
+                className={`hover:scale-110 transition-all shadow-lg bg-gradient-to-r ${prompt?.color} border-0`}
+                onClick={onAddToCart}
+                disabled={isInCart}
+              >
+                {isInCart ? (
+                  <>
+                    <Icon name="Check" className="h-5 w-5 mr-2" />
+                    В корзине
+                  </>
+                ) : (
+                  <>
+                    <Icon name="ShoppingCart" className="h-5 w-5 mr-2" />
+                    Добавить в корзину
+                  </>
+                )}
+              </Button>
             </div>
-            <Button 
-              size="lg"
-              className={`hover:scale-110 transition-all shadow-lg bg-gradient-to-r ${prompt?.color} border-0`}
-              onClick={onAddToCart}
-              disabled={isInCart}
-            >
-              {isInCart ? (
-                <>
-                  <Icon name="Check" className="h-5 w-5 mr-2" />
-                  В корзине
-                </>
-              ) : (
-                <>
-                  <Icon name="ShoppingCart" className="h-5 w-5 mr-2" />
-                  Добавить в корзину
-                </>
-              )}
-            </Button>
-          </div>
-        </div>
+          </TabsContent>
+
+          <TabsContent value="reviews" className="mt-4">
+            {prompt && (
+              <ReviewsSection
+                promptId={prompt.id}
+                totalReviews={prompt.reviews}
+                avgRating={prompt.rating}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

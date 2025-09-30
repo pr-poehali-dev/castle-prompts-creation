@@ -12,6 +12,7 @@ import PromptCard from '@/components/castle/PromptCard';
 import PromptDetailDialog from '@/components/castle/PromptDetailDialog';
 import CartDialog from '@/components/castle/CartDialog';
 import FavoritesDialog from '@/components/castle/FavoritesDialog';
+import AuthorProfileDialog from '@/components/castle/AuthorProfileDialog';
 import Footer from '@/components/castle/Footer';
 import { mockPrompts, categories, categoryColors, Prompt, SortOption } from '@/components/castle/types';
 
@@ -22,6 +23,7 @@ export default function Index() {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [showCart, setShowCart] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [selectedAuthorId, setSelectedAuthorId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('popular');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 20000]);
@@ -225,6 +227,15 @@ export default function Index() {
             setSelectedPrompt(null);
           }
         }}
+        onViewAuthor={(authorId) => setSelectedAuthorId(authorId)}
+      />
+
+      <AuthorProfileDialog
+        isOpen={!!selectedAuthorId}
+        onClose={() => setSelectedAuthorId(null)}
+        authorId={selectedAuthorId}
+        prompts={mockPrompts}
+        onViewPrompt={setSelectedPrompt}
       />
 
       <CartDialog
