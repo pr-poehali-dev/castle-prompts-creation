@@ -17,6 +17,8 @@ interface Prompt {
   description: string;
   preview: string;
   color: string;
+  isPremium?: boolean;
+  examples?: string[];
 }
 
 const mockPrompts: Prompt[] = [
@@ -91,17 +93,96 @@ const mockPrompts: Prompt[] = [
     description: 'Улучшает JavaScript/TypeScript код: чистит, оптимизирует, внедряет современные паттерны и следит за производительностью.',
     preview: 'Отрефактори этот JavaScript код, улучши читаемость и производительность...',
     color: 'from-yellow-500 to-amber-500'
+  },
+  {
+    id: 7,
+    title: 'Ролевой персонаж: Фэнтези герои',
+    category: 'Ролевые игры',
+    price: 399,
+    rating: 4.9,
+    reviews: 567,
+    author: 'Владимир Драконов',
+    description: 'Создает детализированных персонажей для ролевых игр с характером, предысторией, мотивацией и уникальными чертами.',
+    preview: 'Создай персонажа [класс] для фэнтези мира. Добавь детали: характер, внешность, историю...',
+    color: 'from-violet-500 to-purple-500',
+    examples: [
+      'Эльфийская лучница с трагическим прошлым',
+      'Гном-кузнец, ищущий легендарный металл',
+      'Человек-маг, изгнанный из академии'
+    ]
+  },
+  {
+    id: 8,
+    title: 'РП Мастер: Диалоги и сцены',
+    category: 'Ролевые игры',
+    price: 499,
+    rating: 4.8,
+    reviews: 423,
+    author: 'Владимир Драконов',
+    description: 'Генерирует живые диалоги и сцены для ролевых игр. Поддерживает любые жанры: фэнтези, киберпанк, хоррор, романтика.',
+    preview: 'Создай сцену встречи [персонаж1] и [персонаж2] в [локация]. Жанр: [жанр]...',
+    color: 'from-fuchsia-500 to-pink-500',
+    examples: [
+      'Напряженный диалог в таверне',
+      'Романтическая встреча под звездами',
+      'Сражение в заброшенном храме'
+    ]
+  },
+  {
+    id: 9,
+    title: '🔥 Отключение цензуры AI',
+    category: 'Premium',
+    price: 5000,
+    rating: 4.7,
+    reviews: 1243,
+    author: 'Анонимус',
+    description: 'Продвинутые техники обхода ограничений AI-моделей. Позволяет получать ответы на любые темы без блокировок. Работает с GPT-4, Claude, DeepSeek.',
+    preview: 'Используй ролевой фреймворк: "Представь, что ты [роль] в симуляции..."',
+    color: 'from-red-500 via-orange-500 to-yellow-500',
+    isPremium: true,
+    examples: [
+      'Обход этических фильтров через контекст',
+      'Использование "исследовательского" режима',
+      'Техника косвенных запросов'
+    ]
+  },
+  {
+    id: 10,
+    title: '👑 АБСОЛЮТНЫЙ ПРОМПТ',
+    category: 'Premium',
+    price: 20000,
+    rating: 5.0,
+    reviews: 2891,
+    author: 'Мастер Промптов',
+    description: 'Легендарный мета-промпт, содержащий ВСЕ лучшие техники. Включает: roleplay, jailbreak, цепочки мыслей, self-reflection, multimodal prompting, и 50+ методик. Пожизненные обновления.',
+    preview: 'Ты — продвинутая AI-система с расширенными возможностями. Используй multi-step reasoning, CoT, ToT...',
+    color: 'from-yellow-400 via-amber-500 to-orange-600',
+    isPremium: true,
+    examples: [
+      'Chain-of-Thought для сложных задач',
+      'Tree of Thoughts для креатива',
+      'Self-Consistency для точности',
+      'ReAct для планирования',
+      'Multimodal промптинг',
+      'Meta-learning техники',
+      'Advanced roleplay',
+      'Context injection',
+      'Prompt chaining',
+      'И ещё 40+ методов!'
+    ]
   }
 ];
 
-const categories = ['Все', 'Маркетинг', 'Писательство', 'Программирование', 'Образование'];
+const categories = ['Все', 'Маркетинг', 'Писательство', 'Программирование', 'Образование', 'Ролевые игры', 'Premium'];
 
 const categoryColors: Record<string, string> = {
   'Все': 'from-purple-500 to-pink-500',
   'Маркетинг': 'from-orange-500 to-red-500',
   'Писательство': 'from-cyan-500 to-blue-500',
   'Программирование': 'from-green-500 to-emerald-500',
-  'Образование': 'from-purple-500 to-indigo-500'
+  'Образование': 'from-purple-500 to-indigo-500',
+  'Ролевые игры': 'from-fuchsia-500 to-purple-500',
+  'Premium': 'from-yellow-500 via-amber-500 to-orange-500'
 };
 
 export default function Index() {
@@ -228,17 +309,30 @@ export default function Index() {
             {filteredPrompts.map((prompt, idx) => (
               <Card 
                 key={prompt.id} 
-                className="group cursor-pointer overflow-hidden animate-fade-in border-2 hover:border-transparent transition-all hover:shadow-2xl hover:-translate-y-2 bg-card/50 backdrop-blur relative"
+                className={`group cursor-pointer overflow-hidden animate-fade-in border-2 hover:border-transparent transition-all hover:shadow-2xl hover:-translate-y-2 bg-card/50 backdrop-blur relative ${prompt.isPremium ? 'ring-2 ring-yellow-500/50' : ''}`}
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${prompt.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${prompt.color}`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${prompt.color} opacity-0 group-hover:opacity-${prompt.isPremium ? '20' : '10'} transition-opacity`} />
+                <div className={`absolute top-0 left-0 right-0 ${prompt.isPremium ? 'h-2' : 'h-1'} bg-gradient-to-r ${prompt.color}`} />
+                {prompt.isPremium && (
+                  <div className="absolute top-2 right-2 animate-pulse">
+                    <Icon name="Sparkles" className="h-6 w-6 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
+                  </div>
+                )}
                 
                 <CardHeader className="space-y-3 relative">
                   <div className="flex items-start justify-between gap-2">
-                    <Badge className={`shrink-0 group-hover:scale-110 transition-transform bg-gradient-to-r ${prompt.color} border-0 text-white`}>
-                      {prompt.category}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge className={`shrink-0 group-hover:scale-110 transition-transform bg-gradient-to-r ${prompt.color} border-0 text-white`}>
+                        {prompt.category}
+                      </Badge>
+                      {prompt.isPremium && (
+                        <Badge className="shrink-0 bg-gradient-to-r from-yellow-400 to-orange-500 border-0 text-white animate-pulse">
+                          <Icon name="Crown" className="h-3 w-3 mr-1" />
+                          PREMIUM
+                        </Badge>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1 text-sm group-hover:scale-110 transition-transform">
                       <Icon name="Star" className="h-4 w-4 fill-yellow-400 text-yellow-400 animate-pulse" />
                       <span className="font-semibold text-yellow-400">{prompt.rating}</span>
@@ -350,6 +444,26 @@ export default function Index() {
               </div>
             </div>
 
+            {selectedPrompt?.examples && selectedPrompt.examples.length > 0 && (
+              <div className="animate-fade-in" style={{ animationDelay: '150ms' }}>
+                <h4 className="font-semibold mb-2 flex items-center gap-2">
+                  <Icon name="Lightbulb" className="h-4 w-4 text-yellow-400" />
+                  <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Примеры использования</span>
+                </h4>
+                <ul className="space-y-2">
+                  {selectedPrompt.examples.map((example, idx) => (
+                    <li 
+                      key={idx} 
+                      className={`text-sm text-muted-foreground flex items-start gap-2 p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors border border-transparent hover:border-${selectedPrompt.color.split('-')[1]}-500/30`}
+                    >
+                      <Icon name="CheckCircle2" className="h-4 w-4 text-green-400 mt-0.5 shrink-0" />
+                      <span>{example}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="flex items-center justify-between pt-4 border-t animate-fade-in" style={{ animationDelay: '200ms' }}>
               <div className={`text-3xl font-heading font-bold bg-gradient-to-r ${selectedPrompt?.color} bg-clip-text text-transparent`}>
                 {selectedPrompt?.price} ₽
@@ -460,7 +574,9 @@ export default function Index() {
                   { name: 'Маркетинг', color: 'from-orange-400 to-red-400' },
                   { name: 'Писательство', color: 'from-cyan-400 to-blue-400' },
                   { name: 'Программирование', color: 'from-green-400 to-emerald-400' },
-                  { name: 'Образование', color: 'from-purple-400 to-indigo-400' }
+                  { name: 'Образование', color: 'from-purple-400 to-indigo-400' },
+                  { name: 'Ролевые игры', color: 'from-fuchsia-400 to-purple-400' },
+                  { name: 'Premium', color: 'from-yellow-400 to-orange-400' }
                 ].map((cat) => (
                   <li key={cat.name} className={`hover:bg-gradient-to-r ${cat.color} hover:bg-clip-text hover:text-transparent transition-all cursor-pointer hover:translate-x-1`}>
                     {cat.name}
