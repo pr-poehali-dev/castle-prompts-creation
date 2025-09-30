@@ -4,10 +4,12 @@ import Icon from '@/components/ui/icon';
 
 interface HeaderProps {
   cartLength: number;
+  favoritesLength: number;
   onCartClick: () => void;
+  onFavoritesClick: () => void;
 }
 
-export default function Header({ cartLength, onCartClick }: HeaderProps) {
+export default function Header({ cartLength, favoritesLength, onCartClick, onFavoritesClick }: HeaderProps) {
   return (
     <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-primary/5 relative">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-cyan-500/5 to-green-500/5" />
@@ -26,10 +28,22 @@ export default function Header({ cartLength, onCartClick }: HeaderProps) {
               <p className="text-xs bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Цитадель AI-инструментов</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Button variant="ghost" className="hidden md:flex items-center gap-2 hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-pink-500/10 transition-all hover:scale-105 border border-transparent hover:border-purple-500/30">
               <Icon name="User" className="h-5 w-5 text-purple-400" />
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Войти</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="relative hover:bg-gradient-to-r hover:from-pink-500/10 hover:to-red-500/10 hover:border-pink-500/50 transition-all hover:scale-105"
+              onClick={onFavoritesClick}
+            >
+              <Icon name="Heart" className="h-5 w-5 text-pink-400" />
+              {favoritesLength > 0 && (
+                <Badge className="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center p-0 bg-gradient-to-br from-pink-500 to-red-500 animate-scale-in shadow-lg shadow-pink-500/50 border-0">
+                  {favoritesLength}
+                </Badge>
+              )}
             </Button>
             <Button 
               variant="outline" 
